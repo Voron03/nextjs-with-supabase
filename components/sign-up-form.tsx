@@ -95,8 +95,8 @@ export function SignUpForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+          <CardTitle className="text-2xl">S'inscrire</CardTitle>
+          <CardDescription>Créer un nouveau compte</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -104,7 +104,7 @@ export function SignUpForm({
             <div className="flex flex-col gap-4">
 
               <div className="grid gap-2">
-                <Label>First name</Label>
+                <Label>Nom</Label>
                 <Input
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -113,7 +113,7 @@ export function SignUpForm({
               </div>
 
               <div className="grid gap-2">
-                <Label>Last name</Label>
+                <Label>Prénom</Label>
                 <Input
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
@@ -122,7 +122,7 @@ export function SignUpForm({
               </div>
 
               <div className="grid gap-2">
-                <Label>Birthday</Label>
+                <Label>Date de naissance</Label>
                 <Input
                   type="date"
                   value={birthday}
@@ -142,7 +142,7 @@ export function SignUpForm({
               </div>
 
               <div className="grid gap-2">
-                <Label>Password</Label>
+                <Label>Mot de passe</Label>
                 <Input
                   type="password"
                   value={password}
@@ -152,7 +152,7 @@ export function SignUpForm({
               </div>
 
               <div className="grid gap-2">
-                <Label>Repeat Password</Label>
+                <Label>Confirmer le mot de passe</Label>
                 <Input
                   type="password"
                   value={repeatPassword}
@@ -166,14 +166,14 @@ export function SignUpForm({
               )}
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating account..." : "Sign up"}
+                {isLoading ? "Creation de compte..." : "S'inscrire"}
               </Button>
             </div>
 
             <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
+              Vous avez déjà un compte ?{" "}
               <Link href="/auth/login" className="underline underline-offset-4">
-                Login
+                Se connecter
               </Link>
             </div>
           </form>

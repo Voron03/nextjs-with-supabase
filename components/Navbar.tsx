@@ -50,11 +50,11 @@ export default function Navbar() {
                     ) : (
                         <>
                             <Link href="/auth/login" className="text-emerald-600">
-                                Login
+                                Se connecter
                             </Link>
 
                             <Link href="/auth/sign-up" className="text-blue-600">
-                                Register
+                                S'inscrire
                             </Link>
                         </>
                     )}

@@ -53,7 +53,7 @@ export function LoginForm({
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Saisissez votre adresse e-mail ci-dessous pour vous connecter à votre compte.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -99,7 +99,7 @@ export function LoginForm({
                 href="/auth/sign-up"
                 className="underline underline-offset-4"
               >
-                Sign up
+                S'inscrire
               </Link>
             </div>
           </form>
