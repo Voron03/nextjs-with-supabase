@@ -39,7 +39,7 @@ export default function AdminPage() {
         headers,
       });
 
-      const text = await res.text(); // 👈 безопасно читаем всегда
+      const text = await res.text();
 
       if (!res.ok) {
         console.error("API error:", text);
@@ -88,6 +88,33 @@ export default function AdminPage() {
     }
   };
 
+  const toggleUser = async (id: string, current: boolean) => {
+    try {
+      const headers = await getAuthHeader();
+
+      if (!headers) return;
+
+      const res = await fetch("/api/admin/toggle-user", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          userId: id,
+          isActive: !current,
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Toggle error:", text);
+        return;
+      }
+
+      loadUsers();
+    } catch (err) {
+      console.error("Toggle failed:", err);
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -106,17 +133,38 @@ export default function AdminPage() {
             key={u.id}
             className="border p-3 rounded flex justify-between items-center"
           >
+            {/* USER INFO */}
             <div>
               <p className="font-medium">{u.email}</p>
               <p className="text-xs text-gray-500">{u.id}</p>
+
+              <span
+                className={`text-xs px-2 py-1 rounded mt-1 inline-block ${
+                  u.is_active
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-400 text-white"
+                }`}
+              >
+                {u.is_active ? "Active" : "Disabled"}
+              </span>
             </div>
 
-            <button
-              onClick={() => deleteUser(u.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Delete
-            </button>
+            {/* ACTIONS */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => toggleUser(u.id, u.is_active)}
+                className="bg-blue-500 text-white px-3 py-1 rounded"
+              >
+                Toggle
+              </button>
+
+              <button
+                onClick={() => deleteUser(u.id)}
+                className="bg-red-500 text-white px-3 py-1 rounded"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
