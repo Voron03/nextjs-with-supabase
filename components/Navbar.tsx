@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
+import { LogoutButton } from './logout-button'
 
 export default function Navbar() {
     const supabase = createClient()
@@ -39,14 +40,13 @@ export default function Navbar() {
 
                 <div className="flex gap-6 items-center text-sm">
 
-                    <Link href="/">Home</Link>
+                    <Link href="/">Accueil</Link>
                     <Link href="/exercices">Exercices</Link>
                     <Link href="/protected/profile">Profile</Link>
 
                     {user ? (
-                        <button onClick={signOut} className="text-red-500">
-                            Logout
-                        </button>
+                        <LogoutButton />
+
                     ) : (
                         <>
                             <Link href="/auth/login" className="text-emerald-600">

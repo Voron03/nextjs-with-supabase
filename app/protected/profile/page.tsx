@@ -16,7 +16,6 @@ export default function ProfilePage() {
   const [birthday, setBirthday] = useState("");
   const [isActive, setIsActive] = useState(true);
 
-  // 📥 LOAD PROFILE
   useEffect(() => {
     const loadProfile = async () => {
       setLoading(true);
@@ -46,7 +45,6 @@ export default function ProfilePage() {
     loadProfile();
   }, []);
 
-  // 💾 SAVE PROFILE
   const saveProfile = async () => {
     if (!user) return;
 
@@ -103,15 +101,6 @@ export default function ProfilePage() {
           value={birthday}
           onChange={(e) => setBirthday(e.target.value)}
         />
-
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-          />
-          Active user
-        </label>
 
         <button
           onClick={saveProfile}
