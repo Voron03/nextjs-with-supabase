@@ -2,23 +2,29 @@ import { Suspense } from "react";
 import PageContent from "./PageContent";
 
 export default function Page({
-    params,
+  params,
 }: {
-    params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }) {
-    return (
-        <Suspense fallback={<p className="p-6">Loading...</p>}>
-            <PageInner params={params} />
-        </Suspense>
-    );
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-gray-500">
+          Chargement de la page...
+        </div>
+      }
+    >
+      <PageInner params={params} />
+    </Suspense>
+  );
 }
 
 async function PageInner({
-    params,
+  params,
 }: {
-    params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }) {
-    const { id } = await params;
+  const { id } = await params;
 
-    return <PageContent id={id} />;
+  return <PageContent id={id} />;
 }
