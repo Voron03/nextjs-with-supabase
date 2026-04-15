@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function PagesSection({
   menu,
@@ -47,7 +48,7 @@ export default function PagesSection({
           pages
             .filter((p: any) => p.menu_id === selectedMenuId)
             .map((p: any) => (
-              <div key={p.id_page} className="border p-3 flex justify-between">
+              <div key={p.id_page} className="border p-3 flex justify-between items-center">
                 <div>
                   <p className="font-medium">{p.title}</p>
                   <p className="text-xs text-gray-400">
@@ -55,12 +56,20 @@ export default function PagesSection({
                   </p>
                 </div>
 
-                <button
-                  onClick={() => deletePage(p.id_page)}
-                  className="text-red-500"
-                >
-                  Delete
-                </button>
+                <div className="flex items-center gap-2">
+                  <Link href={`/admin/pages/${p.id_page}`}>
+                    <button className="px-2 py-1 bg-blue-500 text-white rounded">
+                      Edit
+                    </button>
+                  </Link>
+
+                  <button
+                    onClick={() => deletePage(p.id_page)}
+                    className="px-2 py-1 bg-red-500 text-white rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))
         )}
