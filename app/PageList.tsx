@@ -16,7 +16,6 @@ export default async function PagesList() {
                         (b: any) => b.type === "text"
                     )?.content || "No description";
 
-                // ✅ FIX: image_url берём из корня
                 const image =
                     page.image_url ||
                     "https://images.unsplash.com/photo-1521737604893-d14cc237f11d";

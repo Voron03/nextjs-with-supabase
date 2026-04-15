@@ -20,6 +20,7 @@ export default async function PageContent({ id }: { id: string }) {
             </h1>
 
             {page.data?.blocks?.map((block: any, i: number) => {
+                
                 if (block.type === "title") {
                     return (
                         <h1 key={i} className="text-3xl font-bold mb-4">
@@ -33,6 +34,18 @@ export default async function PageContent({ id }: { id: string }) {
                         <p key={i} className="text-gray-700 mb-3">
                             {block.content}
                         </p>
+                    );
+                }
+
+                if (block.type === "image") {
+                    return (
+                        <div key={i} className="my-4">
+                            <img
+                                src={block.url}
+                                alt="block image"
+                                className="w-full rounded-lg object-cover"
+                            />
+                        </div>
                     );
                 }
 
