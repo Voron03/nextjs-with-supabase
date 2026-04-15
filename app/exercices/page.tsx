@@ -194,7 +194,6 @@ export default function ExercicesPage() {
         )}
       </div>
 
-      {/* 🌿 TITLE */}
       <div ref={exercisesRef} className="text-center mt-10 mb-10">
         <h2 className="text-3xl font-bold text-gray-800">Vos exercices</h2>
         <p className="text-gray-500 mt-2">
@@ -202,7 +201,6 @@ export default function ExercicesPage() {
         </p>
       </div>
 
-      {/* 📦 GRID */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-6 pb-16 bg-gradient-to-b from-white to-emerald-50">
         {exercices.map((ex) => (
           <ExerciceCard

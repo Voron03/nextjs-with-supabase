@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import PagesList from "./PageList";
 import Link from "next/link";
+import Loading from "@/components/Loading";
 
 export default function Home() {
   return (
@@ -31,7 +32,7 @@ export default function Home() {
 
       {/* Content */}
       <div className="mt-12 w-full p-5">
-        <Suspense fallback={<p className="text-gray-400">Chargement...</p>}>
+        <Suspense fallback={<Loading />}>
           <PagesList />
         </Suspense>
       </div>

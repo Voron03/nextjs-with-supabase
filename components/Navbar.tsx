@@ -1,66 +1,101 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { createClient } from '@/utils/supabase/client'
-import { useEffect, useState } from 'react'
-import { LogoutButton } from './logout-button'
+import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
+import { LogoutButton } from "./logout-button";
 
 export default function Navbar() {
-    const supabase = createClient()
-    const [user, setUser] = useState<any>(null)
+  const supabase = createClient();
+  const [user, setUser] = useState<any>(null);
 
-    useEffect(() => {
-        supabase.auth.getUser().then(({ data }) => {
-            setUser(data.user)
-        })
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
 
-        const { data: listener } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
-                setUser(session?.user ?? null)
-            }
-        )
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
 
-        return () => {
-            listener.subscription.unsubscribe()
-        }
-    }, [])
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
-    const signOut = async () => {
-        await supabase.auth.signOut()
-        setUser(null)
-    }
+  return (
+    <nav className="sticky top-0 z-50 w-full bg-white/60 backdrop-blur-xl border-b border-white/30 shadow-sm">
 
-    return (
-        <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md">
-            <div className="flex items-center justify-between px-8 py-4">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
 
-                <div className="font-bold text-xl">
-                    CESIZen
-                </div>
+        {/* LOGO */}
+        <Link
+          href="/"
+          className="text-xl font-extrabold tracking-tight text-gray-900 hover:opacity-80 transition"
+        >
+          CESIZen
+        </Link>
 
-                <div className="flex gap-6 items-center text-sm">
+        {/* LINKS */}
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
 
-                    <Link href="/">Accueil</Link>
-                    <Link href="/exercices">Exercices</Link>
-                    <Link href="/protected/profile">Profile</Link>
+          <Link
+            href="/"
+            className="text-gray-600 hover:text-black transition"
+          >
+            Accueil
+          </Link>
 
-                    {user ? (
-                        <LogoutButton />
+          <Link
+            href="/exercices"
+            className="text-gray-600 hover:text-black transition"
+          >
+            Exercices
+          </Link>
 
-                    ) : (
-                        <>
-                            <Link href="/auth/login" className="text-emerald-600">
-                                Se connecter
-                            </Link>
+          <Link
+            href="/protected/profile"
+            className="text-gray-600 hover:text-black transition"
+          >
+            Profil
+          </Link>
+        </div>
 
-                            <Link href="/auth/sign-up" className="text-blue-600">
-                                S'inscrire
-                            </Link>
-                        </>
-                    )}
+        {/* AUTH SECTION */}
+        <div className="flex items-center gap-3">
 
-                </div>
+          {user ? (
+            <div className="flex items-center gap-3">
+              {/* user pill */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-sm">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Connecté
+              </div>
+
+              <LogoutButton />
             </div>
-        </nav>
-    )
+          ) : (
+            <div className="flex items-center gap-3">
+
+              <Link
+                href="/auth/login"
+                className="px-4 py-2 rounded-full text-sm text-gray-700 hover:text-black transition"
+              >
+                Se connecter
+              </Link>
+
+              <Link
+                href="/auth/sign-up"
+                className="px-4 py-2 rounded-full bg-black text-white text-sm hover:bg-gray-800 transition transform hover:scale-105"
+              >
+                S'inscrire
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
 }
