@@ -13,10 +13,26 @@ type Exercice = {
   exhale_seconds: number;
 };
 
+function ExerciceSkeleton() {
+  return (
+    <div className="p-6 rounded-3xl border bg-white/60 backdrop-blur animate-pulse">
+      <div className="h-5 w-2/3 bg-gray-200 rounded mb-4" />
+      <div className="space-y-2">
+        <div className="h-3 w-full bg-gray-200 rounded" />
+        <div className="h-3 w-5/6 bg-gray-200 rounded" />
+        <div className="h-3 w-4/6 bg-gray-200 rounded" />
+      </div>
+      <div className="mt-6 h-10 bg-gray-200 rounded-full" />
+    </div>
+  );
+}
+
 export default function ExercicesPage() {
   const supabase = createClient();
 
   const [exercices, setExercices] = useState<Exercice[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [active, setActive] = useState<Exercice | null>(null);
   const [phase, setPhase] = useState("idle");
   const [timeLeft, setTimeLeft] = useState(0);
@@ -28,7 +44,6 @@ export default function ExercicesPage() {
   const exercisesRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<HTMLDivElement | null>(null);
 
-  // 🔥 SCROLL TO SECTIONS
   const scrollToExercises = () => {
     exercisesRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -47,8 +62,12 @@ export default function ExercicesPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+
       const { data } = await supabase.from("exercice").select("*");
+
       setExercices(data || []);
+      setLoading(false);
     };
 
     fetchData();
@@ -87,7 +106,7 @@ export default function ExercicesPage() {
     setActive(ex);
     setShowTimer(true);
 
-    scrollToTimer(); // 🔥 IMPORTANT FIX
+    scrollToTimer();
 
     const prep = [3, 2, 1];
 
@@ -136,7 +155,6 @@ export default function ExercicesPage() {
   return (
     <div className="bg-white">
 
-      {/* 🌿 HERO */}
       <div
         className="w-full h-screen flex flex-col items-center justify-center text-center relative overflow-hidden"
         style={{
@@ -167,7 +185,6 @@ export default function ExercicesPage() {
         </div>
       </div>
 
-      {/* 🧘 TIMER */}
       <div
         ref={timerRef}
         className={`
@@ -202,13 +219,18 @@ export default function ExercicesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-6 pb-16 bg-gradient-to-b from-white to-emerald-50">
-        {exercices.map((ex) => (
-          <ExerciceCard
-            key={ex.id_exercice}
-            exercice={ex}
-            onStart={() => startExercise(ex)}
-          />
-        ))}
+
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <ExerciceSkeleton key={i} />
+            ))
+          : exercices.map((ex) => (
+              <ExerciceCard
+                key={ex.id_exercice}
+                exercice={ex}
+                onStart={() => startExercise(ex)}
+              />
+            ))}
       </div>
     </div>
   );
