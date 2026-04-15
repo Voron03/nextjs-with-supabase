@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,10 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function SignUpForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function SignUpForm() {
   const supabase = createClient();
   const router = useRouter();
 
@@ -41,16 +37,13 @@ export function SignUpForm({
     setError(null);
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      setError("Les mots de passe ne correspondent pas");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // =========================
-      // 1. CREATE AUTH USER
-      // =========================
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -60,124 +53,148 @@ export function SignUpForm({
 
       const user = data.user;
 
-      if (!user) {
-        throw new Error(
-          "User not returned (email confirmation might be enabled)"
-        );
-      }
+      if (!user) throw new Error("User not created");
 
-      // =========================
-      // 2. UPDATE PROFILE (NOT INSERT!)
-      // =========================
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
           first_name: firstName,
           last_name: lastName,
-          birthday: birthday,
+          birthday,
         })
         .eq("id", user.id);
 
       if (profileError) throw profileError;
 
-      // =========================
-      // 3. SUCCESS
-      // =========================
       router.push("/auth/sign-up-success");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : "Erreur inconnue");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">S'inscrire</CardTitle>
-          <CardDescription>Créer un nouveau compte</CardDescription>
+    <div className="flex flex-col gap-6 text-gray-900">
+
+      <Card className="rounded-3xl border border-gray-100 bg-white/80 backdrop-blur-xl shadow-xl text-gray-900">
+
+        {/* HEADER */}
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-3xl font-bold text-gray-900">
+            Créer un compte ✨
+          </CardTitle>
+
+          <CardDescription className="text-gray-600">
+            Rejoignez CESIZen et commencez votre pratique
+          </CardDescription>
         </CardHeader>
 
+        {/* FORM */}
         <CardContent>
           <form onSubmit={handleSignUp}>
             <div className="flex flex-col gap-4">
 
+              {/* NAME */}
               <div className="grid gap-2">
-                <Label>Nom</Label>
+                <Label className="text-gray-700">Nom</Label>
                 <Input
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
+                  className="h-11 rounded-xl text-gray-900 placeholder:text-gray-400"
                   required
                 />
               </div>
 
               <div className="grid gap-2">
-                <Label>Prénom</Label>
+                <Label className="text-gray-700">Prénom</Label>
                 <Input
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
+                  className="h-11 rounded-xl text-gray-900 placeholder:text-gray-400"
                   required
                 />
               </div>
 
+              {/* BIRTHDAY */}
               <div className="grid gap-2">
-                <Label>Date de naissance</Label>
+                <Label className="text-gray-700">Date de naissance</Label>
                 <Input
                   type="date"
                   value={birthday}
                   onChange={(e) => setBirthday(e.target.value)}
+                  className="h-11 rounded-xl text-gray-900"
                   required
                 />
               </div>
 
+              {/* EMAIL */}
               <div className="grid gap-2">
-                <Label>Email</Label>
+                <Label className="text-gray-700">Email</Label>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="h-11 rounded-xl text-gray-900 placeholder:text-gray-400"
                   required
                 />
               </div>
 
+              {/* PASSWORD */}
               <div className="grid gap-2">
-                <Label>Mot de passe</Label>
+                <Label className="text-gray-700">Mot de passe</Label>
                 <Input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="h-11 rounded-xl text-gray-900"
                   required
                 />
               </div>
 
+              {/* CONFIRM */}
               <div className="grid gap-2">
-                <Label>Confirmer le mot de passe</Label>
+                <Label className="text-gray-700">Confirmer</Label>
                 <Input
                   type="password"
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
+                  className="h-11 rounded-xl text-gray-900"
                   required
                 />
               </div>
 
+              {/* ERROR */}
               {error && (
-                <p className="text-sm text-red-500">{error}</p>
+                <div className="text-sm text-red-600 bg-red-50 border border-red-100 p-2 rounded-xl">
+                  {error}
+                </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creation de compte..." : "S'inscrire"}
+              {/* BUTTON */}
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full h-11 rounded-xl bg-black text-white hover:bg-gray-800 transition"
+              >
+                {isLoading ? "Création..." : "S'inscrire"}
               </Button>
-            </div>
 
-            <div className="mt-4 text-center text-sm">
-              Vous avez déjà un compte ?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
-                Se connecter
-              </Link>
+              {/* LOGIN */}
+              <p className="text-center text-sm text-gray-600">
+                Déjà un compte ?{" "}
+                <Link
+                  href="/auth/login"
+                  className="text-black font-medium hover:underline"
+                >
+                  Se connecter
+                </Link>
+              </p>
+
             </div>
           </form>
         </CardContent>
+
       </Card>
     </div>
   );
