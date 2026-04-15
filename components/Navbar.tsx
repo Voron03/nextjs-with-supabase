@@ -7,16 +7,33 @@ import { LogoutButton } from "./logout-button";
 
 export default function Navbar() {
   const supabase = createClient();
+
   const [user, setUser] = useState<any>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
+    const fetchProfile = async (userId: string) => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
 
+      setRole(data?.role || null);
+    };
+
+    // 🔥 ONLY ONE SOURCE OF TRUTH
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session?.user ?? null);
+        const currentUser = session?.user ?? null;
+
+        setUser(currentUser);
+
+        if (currentUser) {
+          fetchProfile(currentUser.id);
+        } else {
+          setRole(null);
+        }
       }
     );
 
@@ -30,71 +47,49 @@ export default function Navbar() {
 
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
 
-        {/* LOGO */}
-        <Link
-          href="/"
-          className="text-xl font-extrabold tracking-tight text-gray-900 hover:opacity-80 transition"
-        >
+        <Link href="/" className="text-xl font-bold text-gray-900">
           CESIZen
         </Link>
 
-        {/* LINKS */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+        <div className="hidden md:flex gap-6 text-sm">
 
-          <Link
-            href="/"
-            className="text-gray-600 hover:text-black transition"
-          >
+          <Link href="/" className="text-gray-600 hover:text-black">
             Accueil
           </Link>
 
-          <Link
-            href="/exercices"
-            className="text-gray-600 hover:text-black transition"
-          >
+          <Link href="/exercices" className="text-gray-600 hover:text-black">
             Exercices
           </Link>
 
-          <Link
-            href="/protected/profile"
-            className="text-gray-600 hover:text-black transition"
-          >
+          <Link href="/protected/profile" className="text-gray-600 hover:text-black">
             Profil
           </Link>
+
+          {role === "admin" && (
+            <Link href="/admin" className="text-emerald-600 font-semibold">
+              Admin
+            </Link>
+          )}
+
         </div>
 
-        {/* AUTH SECTION */}
         <div className="flex items-center gap-3">
 
           {user ? (
-            <div className="flex items-center gap-3">
-              {/* user pill */}
-              <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-sm">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Connecté
-              </div>
-
-              <LogoutButton />
-            </div>
+            <LogoutButton />
           ) : (
-            <div className="flex items-center gap-3">
-
-              <Link
-                href="/auth/login"
-                className="px-4 py-2 rounded-full text-sm text-gray-700 hover:text-black transition"
-              >
-                Se connecter
+            <>
+              <Link href="/auth/login" className="text-gray-700">
+                Login
               </Link>
-
-              <Link
-                href="/auth/sign-up"
-                className="px-4 py-2 rounded-full bg-black text-white text-sm hover:bg-gray-800 transition transform hover:scale-105"
-              >
-                S'inscrire
+              <Link href="/auth/sign-up" className="bg-black text-white px-4 py-2 rounded-full">
+                Sign up
               </Link>
-            </div>
+            </>
           )}
+
         </div>
+
       </div>
     </nav>
   );

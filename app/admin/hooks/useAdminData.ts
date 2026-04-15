@@ -5,6 +5,8 @@ export function useAdminData(getAuthHeader: () => Promise<any>) {
   const [menu, setMenu] = useState<any[]>([]);
   const [pages, setPages] = useState<any[]>([]);
 
+  const [loading, setLoading] = useState<boolean>(true);
+
   const loadUsers = async () => {
     const headers = await getAuthHeader();
     if (!headers) return;
@@ -33,7 +35,17 @@ export function useAdminData(getAuthHeader: () => Promise<any>) {
   };
 
   const refreshAll = async () => {
-    await Promise.all([loadUsers(), loadMenu(), loadPages()]);
+    setLoading(true);
+
+    try {
+      await Promise.all([
+        loadUsers(),
+        loadMenu(),
+        loadPages(),
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -44,6 +56,7 @@ export function useAdminData(getAuthHeader: () => Promise<any>) {
     users,
     menu,
     pages,
+    loading,
     setUsers,
     setMenu,
     setPages,

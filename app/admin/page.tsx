@@ -28,8 +28,8 @@ export default function AdminPage() {
     };
   };
 
-  /* 📦 DATA */
-  const { users, menu, pages, refreshAll } =
+  /* 📦 DATA (IMPORTANT: include loading) */
+  const { users, menu, pages, loading, refreshAll } =
     useAdminData(getAuthHeader);
 
   /* ⚙️ ACTIONS */
@@ -55,21 +55,23 @@ export default function AdminPage() {
       </div>
 
       {/* CONTENT */}
-      <div className="max-w-6xl mx-auto p-6 space-y-10">
+      <div className="max-w-6xl mx-auto p-6 space-y-10 pt-6">
 
         {/* USERS */}
-        <section className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-md rounded-3xl p-6 hover:shadow-xl transition">
+        <section className="bg-white/60 backdrop-blur-xl border border-gray-100 shadow-sm rounded-3xl p-6 hover:shadow-lg transition">
           <UsersSection
             users={users}
+            loading={loading}
             toggleUser={actions.toggleUser}
             deleteUser={actions.deleteUser}
           />
         </section>
 
         {/* MENU */}
-        <section className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-md rounded-3xl p-6 hover:shadow-xl transition">
+        <section className="bg-white/60 backdrop-blur-xl border border-gray-100 shadow-sm rounded-3xl p-6 hover:shadow-lg transition">
           <MenuSection
             menu={menu}
+            loading={loading}
             createMenu={actions.createMenu}
             deleteMenu={(id: string) =>
               actions.deleteMenu(id, selectedMenuId, setSelectedMenuId)
@@ -78,9 +80,10 @@ export default function AdminPage() {
         </section>
 
         {/* PAGES */}
-        <section className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-md rounded-3xl p-6 hover:shadow-xl transition">
+        <section className="bg-white/60 backdrop-blur-xl border border-gray-100 shadow-sm rounded-3xl p-6 hover:shadow-lg transition">
           <PagesSection
             menu={menu}
+            loading={loading}
             pages={pages}
             selectedMenuId={selectedMenuId}
             setSelectedMenuId={setSelectedMenuId}

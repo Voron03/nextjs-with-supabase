@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Link from "next/link";
+import Loading from "@/components/Loading";
 
 export default function PagesSection({
   menu,
@@ -8,6 +9,7 @@ export default function PagesSection({
   setSelectedMenuId,
   createPage,
   deletePage,
+  loading,
 }: any) {
   useEffect(() => {
     if (menu.length && !selectedMenuId) {
@@ -41,7 +43,6 @@ export default function PagesSection({
       {/* CONTROLS */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
 
-        {/* SELECT */}
         <select
           className="px-4 py-2 rounded-xl border border-gray-200 bg-white/70 backdrop-blur focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none transition"
           value={selectedMenuId}
@@ -55,7 +56,6 @@ export default function PagesSection({
           ))}
         </select>
 
-        {/* ADD BUTTON */}
         <button
           onClick={createPage}
           disabled={!selectedMenuId}
@@ -65,16 +65,23 @@ export default function PagesSection({
         </button>
       </div>
 
+      {/* LOADING */}
+      {loading && (
+        <div className="py-10 flex justify-center">
+          <Loading />
+        </div>
+      )}
+
       {/* EMPTY STATE */}
-      {!selectedMenuId ? (
+      {!loading && !selectedMenuId ? (
         <div className="p-6 rounded-2xl border bg-gray-50 text-center text-sm text-gray-500">
           Sélectionnez un menu pour afficher les pages
         </div>
-      ) : filteredPages?.length === 0 ? (
+      ) : !loading && filteredPages?.length === 0 ? (
         <div className="p-6 rounded-2xl border bg-gray-50 text-center text-sm text-gray-500">
           Aucune page disponible
         </div>
-      ) : (
+      ) : !loading && (
         <div className="space-y-3">
 
           {filteredPages.map((p: any) => (
@@ -86,12 +93,10 @@ export default function PagesSection({
               {/* LEFT */}
               <div className="flex items-center gap-3">
 
-                {/* ICON */}
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-blue-400 flex items-center justify-center text-white font-bold">
                   {p.title?.charAt(0).toUpperCase()}
                 </div>
 
-                {/* INFO */}
                 <div>
                   <p className="text-sm font-medium text-gray-900">
                     {p.title}
@@ -120,11 +125,13 @@ export default function PagesSection({
                 </button>
 
               </div>
+
             </div>
           ))}
 
         </div>
       )}
+
     </div>
   );
 }
