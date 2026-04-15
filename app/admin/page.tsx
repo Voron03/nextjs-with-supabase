@@ -139,13 +139,12 @@ export default function AdminPage() {
               <p className="text-xs text-gray-500">{u.id}</p>
 
               <span
-                className={`text-xs px-2 py-1 rounded mt-1 inline-block ${
-                  u.is_active
+                className={`text-xs px-2 py-1 rounded mt-1 inline-block ${u.is_active
                     ? "bg-green-500 text-white"
                     : "bg-gray-400 text-white"
-                }`}
+                  }`}
               >
-                {u.is_active ? "Active" : "Disabled"}
+                {u.is_active ? "Active" : "Désactivé"}
               </span>
             </div>
 
@@ -153,16 +152,18 @@ export default function AdminPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => toggleUser(u.id, u.is_active)}
-                className="bg-blue-500 text-white px-3 py-1 rounded"
+                className={`px-3 py-1 rounded text-white ${u.is_active ? "bg-gray-400" : "bg-green-400"
+                  }`}
               >
-                Toggle
+                {u.is_active ? "Désactiver" : "Activer"}
               </button>
+
 
               <button
                 onClick={() => deleteUser(u.id)}
                 className="bg-red-500 text-white px-3 py-1 rounded"
               >
-                Delete
+                Supprimer
               </button>
             </div>
           </div>
