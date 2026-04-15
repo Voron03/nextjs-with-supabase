@@ -31,7 +31,7 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="z-50 w-full bg-white/70 backdrop-blur-md">
+        <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md">
             <div className="flex items-center justify-between px-8 py-4">
 
                 <div className="font-bold text-xl">
