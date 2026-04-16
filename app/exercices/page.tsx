@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import ExerciceCard from "@/components/ExerciceCard";
 import Timer from "@/components/Timer";
 
